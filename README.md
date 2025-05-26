@@ -18,7 +18,7 @@ Place an Excel file named `事業所.xlsx` in this directory. It must have a col
 Execute the scraper using:
 
 ```bash
-python スクレイピング.py
+python total_Scraping.py
 ```
 
 ## Output
