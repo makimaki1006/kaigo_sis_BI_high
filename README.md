@@ -28,4 +28,5 @@ The following files are generated in the current directory:
 - `統合スクレイピング結果.csv` – CSV backup. If Excel export fails, `統合スクレイピング結果_エラー時.csv` is saved instead.
 - `中間保存_<番号>件.xlsx` – periodic backups every 10 processed URLs.
 - `緊急保存_スクレイピング結果.csv` – emergency backup written when an exception stops the run.
+- `scraped_data.db` – SQLite database storing the results.
 

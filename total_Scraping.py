@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import time
+from db_utils import save_to_sqlite
 
 def setup_webdriver():
     """WebDriverの設定と初期化"""
@@ -438,6 +439,8 @@ def main():
         # 結果をDataFrameに変換
         scraped_data = pd.DataFrame(scraped_data_list)
         
+        # SQLiteにも保存
+        save_to_sqlite(scraped_data, "scraped_data.db")
         # 最終結果をExcelファイルに出力
         output_filename = "統合スクレイピング結果.xlsx"
         success = save_to_excel_with_formatting(scraped_data, output_filename)
