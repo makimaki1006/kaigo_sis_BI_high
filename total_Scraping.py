@@ -61,7 +61,8 @@ def scrape_tab1_corporation_info(driver):
             try:
                 image_element = driver.find_element(By.XPATH, xpath)
                 data[f"サービス提供_{service_name}"] = image_element.get_attribute('src')
-            except:
+            except Exception as e:
+                print(f"Error retrieving service '{service_name}': {e}")
                 data[f"サービス提供_{service_name}"] = None
                 
     except Exception as e:
@@ -91,7 +92,8 @@ def scrape_tab2_location_info(driver):
         # ホームページ（リンクの場合）
         try:
             data["ホームページ"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[9]/td[2]/a").get_attribute('href')
-        except:
+        except Exception as e:
+            print(f"Error retrieving homepage link: {e}")
             data["ホームページ"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[9]/td[2]").text
             
         data["介護保険事業所番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[10]/td").text
@@ -105,7 +107,8 @@ def scrape_tab2_location_info(driver):
         try:
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[17]/td/img")
             data["生活保護法第54条の2指定機関"] = image_element.get_attribute('src')
-        except:
+        except Exception as e:
+            print(f"Error retrieving public assistance image: {e}")
             data["生活保護法第54条の2指定機関"] = None
             
         data["主な利用交通手段"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[19]/td").text
@@ -168,7 +171,8 @@ def scrape_tab3_staff_info(driver):
                 data[f"{qual_name}_非常勤"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td[2]").text
                 data[f"{qual_name}_合計"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td[3]").text
                 data[f"{qual_name}_常勤換算"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td[4]").text
-            except:
+            except Exception as e:
+                print(f"Error retrieving qualification '{qual_name}': {e}")
                 continue
                 
     except Exception as e:
@@ -200,7 +204,8 @@ def scrape_tab4_service_info(driver):
         try:
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[11]/td/img")
             data["緊急時の電話連絡の対応"] = image_element.get_attribute('src')
-        except:
+        except Exception as e:
+            print(f"Error retrieving emergency contact image: {e}")
             data["緊急時の電話連絡の対応"] = None
             
         data["緊急時連絡先電話番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[12]/td").text
@@ -229,7 +234,8 @@ def scrape_tab4_service_info(driver):
             try:
                 image_element = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[{row_num}]/td/img")
                 data[f"加算_{addon_name}"] = image_element.get_attribute('src')
-            except:
+            except Exception as e:
+                print(f"Error retrieving addon '{addon_name}': {e}")
                 data[f"加算_{addon_name}"] = None
         
         # 利用者数情報
@@ -241,7 +247,8 @@ def scrape_tab4_service_info(driver):
             try:
                 data[f"{level}_利用者数"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[35]/td[{i+1}]").text
                 data[f"{level}_前年同月"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[36]/td[{i+1}]").text
-            except:
+            except Exception as e:
+                print(f"Error retrieving user count '{level}': {e}")
                 continue
         
         # 苦情対応窓口
@@ -252,7 +259,8 @@ def scrape_tab4_service_info(driver):
         try:
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[47]/td/img")
             data["損害賠償保険の加入状況"] = image_element.get_attribute('src')
-        except:
+        except Exception as e:
+            print(f"Error retrieving insurance image: {e}")
             data["損害賠償保険の加入状況"] = None
             
         data["介護サービス提供内容の特色"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[49]/td").text
@@ -262,7 +270,8 @@ def scrape_tab4_service_info(driver):
         for i, service in enumerate(services):
             try:
                 data[f"ケアプラン_{service}_利用割合"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[{52+i}]/td").text
-            except:
+            except Exception as e:
+                print(f"Error retrieving service usage '{service}': {e}")
                 continue
                 
     except Exception as e:
@@ -286,7 +295,8 @@ def scrape_tab5_user_info(driver):
         try:
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-6']/table/tbody/tr[4]/td/img")
             data["キャンセル料徴収状況"] = image_element.get_attribute('src')
-        except:
+        except Exception as e:
+            print(f"Error retrieving cancel fee image: {e}")
             data["キャンセル料徴収状況"] = None
             
         data["キャンセル料の額・算定方法"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-6']/table/tbody/tr[5]/td").text
