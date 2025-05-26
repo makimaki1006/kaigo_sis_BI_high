@@ -302,8 +302,10 @@ def scrape_website(driver, url):
     
     try:
         driver.get(url)
-        # ページの読み込み待機
-        time.sleep(2)
+        # 最初のタブが読み込まれるまで待機
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="kihonItemTab"]/li[1]/a'))
+        )
         
         # 各タブからデータを取得
         tab1_data = scrape_tab1_corporation_info(driver)
