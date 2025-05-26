@@ -8,7 +8,7 @@
 Install dependencies with pip:
 
 ```bash
-pip install pandas selenium webdriver-manager openpyxl
+pip install pandas selenium webdriver-manager openpyxl geopy folium
 ```
 
 ## Input
@@ -29,4 +29,13 @@ The following files are generated in the current directory:
 - `中間保存_<番号>件.xlsx` – periodic backups every 10 processed URLs.
 - `緊急保存_スクレイピング結果.csv` – emergency backup written when an exception stops the run.
 - `scraped_data.db` – SQLite database storing the results.
+
+## Visualization
+Use `visualize_facilities.py` to display facilities near a given city on a map.
+
+```bash
+python visualize_facilities.py --city "札幌市" --radius 5 --csv 統合スクレイピング結果.csv
+```
+
+This script geocodes facility addresses and outputs an interactive map (`map.html`).
 

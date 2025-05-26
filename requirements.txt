@@ -2,3 +2,5 @@ pandas
 selenium
 webdriver-manager
 openpyxl
+geopy
+folium
