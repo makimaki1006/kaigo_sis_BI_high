@@ -120,61 +120,44 @@ def scrape_tab2_location_info(driver):
 def scrape_tab3_staff_info(driver):
     """タブ3: 従業者等の情報の取得"""
     data = {}
+
+    def _normalize(text: str) -> str:
+        """Remove spaces and newlines for key construction."""
+        return text.replace("\n", "_").replace(" ", "").replace("　", "")
+
     try:
         # タブ3をクリック
         WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, '//*[@id="kihonItemTab"]/li[3]/a'))
         ).click()
-        
-        # 主要な従業者情報の取得
-        data["従業者_管理者_常勤_資格"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td").text
-        data["従業者_管理者_常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[2]").text
-        data["従業者_管理者_非常勤_資格"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[3]").text
-        data["従業者_管理者_非常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[4]").text
-        data["従業者_管理者_合計_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[5]").text
-        data["従業者_管理者_常勤換算"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[6]").text
-        
-        # 介護支援専門員の情報
-        data["従業者_介護支援専門員_常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[5]/td").text
-        data["従業者_介護支援専門員_非常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[5]/td[2]").text
-        data["従業者_介護支援専門員_合計_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[5]/td[3]").text
-        data["従業者_介護支援専門員_常勤換算"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[5]/td[4]").text
-        
-        # 事務員等の情報
-        data["従業者_事務員等_常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[6]/td").text
-        data["従業者_事務員等_非常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[6]/td[2]").text
-        data["従業者_事務員等_合計_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[6]/td[3]").text
-        
-        # 資格・研修情報の取得（主要なもの）
-        qualifications = [
-            ("主任介護支援専門員", 14),
-            ("介護支援専門員", 15),
-            ("介護福祉士", 16),
-            ("実務者研修", 17),
-            ("初任者研修", 18),
-            ("社会福祉士", 19),
-            ("看護師", 20),
-            ("准看護師", 21),
-            ("保健師", 22),
-            ("理学療法士", 23),
-            ("作業療法士", 24),
-            ("言語聴覚士", 25),
-            ("栄養士", 26),
-            ("管理栄養士", 27)
-        ]
-        
-        for qual_name, row_num in qualifications:
-            try:
-                data[f"従業者_{qual_name}_常勤"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td").text
-                data[f"従業者_{qual_name}_非常勤"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td[2]").text
-                data[f"従業者_{qual_name}_合計"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td[3]").text
-                data[f"従業者_{qual_name}_常勤換算"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td[4]").text
-            except:
+
+        table = driver.find_element(By.ID, "tableGroup-4")
+        rows = table.find_elements(By.XPATH, ".//tr")
+
+        headers = []
+        header_index = -1
+        for idx, row in enumerate(rows):
+            header_cells = row.find_elements(By.TAG_NAME, "th")
+            if header_cells:
+                headers = [_normalize(c.text) for c in row.find_elements(By.XPATH, "./th|./td")]
+                header_index = idx
+                break
+
+        for row in rows[header_index + 1:]:
+            cells = row.find_elements(By.XPATH, "./th|./td")
+            if len(cells) < 2:
                 continue
-                
+            row_label = _normalize(cells[0].text)
+            for i, cell in enumerate(cells[1:], start=1):
+                if i >= len(headers):
+                    continue
+                col_label = _normalize(headers[i])
+                key = f"従業者_{row_label}_{col_label}"
+                data[key] = cell.text.strip()
+
     except Exception as e:
         print(f"Error in tab3: {e}")
-    
+
     return data
 
 def scrape_tab4_service_info(driver):
