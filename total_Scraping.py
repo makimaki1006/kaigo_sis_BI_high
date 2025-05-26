@@ -62,7 +62,8 @@ def scrape_tab1_corporation_info(driver):
             try:
                 image_element = driver.find_element(By.XPATH, xpath)
                 data[f"法人_サービス提供_{service_name}"] = image_element.get_attribute('src')
-            except:
+            except Exception as e:
+                print(f"Error retrieving 法人_サービス提供_{service_name}: {e}")
                 data[f"法人_サービス提供_{service_name}"] = None
                 
     except Exception as e:
@@ -92,7 +93,8 @@ def scrape_tab2_location_info(driver):
         # ホームページ（リンクの場合）
         try:
             data["事業所_ホームページ"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[9]/td[2]/a").get_attribute('href')
-        except:
+        except Exception as e:
+            print(f"Error retrieving 事業所_ホームページ: {e}")
             data["事業所_ホームページ"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[9]/td[2]").text
             
         data["事業所_介護保険事業所番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[10]/td").text
@@ -106,7 +108,8 @@ def scrape_tab2_location_info(driver):
         try:
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[17]/td/img")
             data["事業所_生活保護法第54条の2指定機関"] = image_element.get_attribute('src')
-        except:
+        except Exception as e:
+            print(f"Error retrieving 事業所_生活保護法第54条の2指定機関: {e}")
             data["事業所_生活保護法第54条の2指定機関"] = None
             
         data["事業所_主な利用交通手段"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[19]/td").text
@@ -184,7 +187,8 @@ def scrape_tab4_service_info(driver):
         try:
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[11]/td/img")
             data["サービス_緊急時の電話連絡の対応"] = image_element.get_attribute('src')
-        except:
+        except Exception as e:
+            print(f"Error retrieving サービス_緊急時の電話連絡の対応: {e}")
             data["サービス_緊急時の電話連絡の対応"] = None
             
         data["サービス_緊急時連絡先電話番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[12]/td").text
@@ -213,7 +217,8 @@ def scrape_tab4_service_info(driver):
             try:
                 image_element = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[{row_num}]/td/img")
                 data[f"サービス_加算_{addon_name}"] = image_element.get_attribute('src')
-            except:
+            except Exception as e:
+                print(f"Error retrieving サービス_加算_{addon_name}: {e}")
                 data[f"サービス_加算_{addon_name}"] = None
         
         # 利用者数情報
@@ -225,7 +230,8 @@ def scrape_tab4_service_info(driver):
             try:
                 data[f"サービス_{level}_利用者数"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[35]/td[{i+1}]").text
                 data[f"サービス_{level}_前年同月"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[36]/td[{i+1}]").text
-            except:
+            except Exception as e:
+                print(f"Error retrieving サービス_{level} 利用者数情報: {e}")
                 continue
         
         # 苦情対応窓口
@@ -236,7 +242,8 @@ def scrape_tab4_service_info(driver):
         try:
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[47]/td/img")
             data["サービス_損害賠償保険の加入状況"] = image_element.get_attribute('src')
-        except:
+        except Exception as e:
+            print(f"Error retrieving サービス_損害賠償保険の加入状況: {e}")
             data["サービス_損害賠償保険の加入状況"] = None
             
         data["サービス_介護サービス提供内容の特色"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[49]/td").text
@@ -246,7 +253,8 @@ def scrape_tab4_service_info(driver):
         for i, service in enumerate(services):
             try:
                 data[f"サービス_ケアプラン_{service}_利用割合"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[{52+i}]/td").text
-            except:
+            except Exception as e:
+                print(f"Error retrieving サービス_ケアプラン_{service}_利用割合: {e}")
                 continue
                 
     except Exception as e:
@@ -270,7 +278,8 @@ def scrape_tab5_user_info(driver):
         try:
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-6']/table/tbody/tr[4]/td/img")
             data["利用者_キャンセル料徴収状況"] = image_element.get_attribute('src')
-        except:
+        except Exception as e:
+            print(f"Error retrieving 利用者_キャンセル料徴収状況: {e}")
             data["利用者_キャンセル料徴収状況"] = None
             
         data["利用者_キャンセル料の額・算定方法"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-6']/table/tbody/tr[5]/td").text
@@ -362,7 +371,8 @@ def save_to_excel_with_formatting(df, filename):
                     try:
                         if len(str(cell.value)) > max_length:
                             max_length = len(str(cell.value))
-                    except:
+                    except Exception as e:
+                        print(f"Error adjusting column width: {e}")
                         pass
                 adjusted_width = min(max_length + 2, 50)
                 worksheet.column_dimensions[column[0].column_letter].width = adjusted_width
@@ -465,8 +475,8 @@ def main():
         # 万が一WebDriverが残っている場合の処理
         try:
             driver.quit()
-        except:
-            pass
+        except Exception as e:
+            print(f"Error closing driver: {e}")
 
 if __name__ == "__main__":
     main()
