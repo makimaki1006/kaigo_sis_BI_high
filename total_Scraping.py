@@ -28,17 +28,17 @@ def scrape_tab1_corporation_info(driver):
         ).click()
         
         # 法人情報の取得
-        data["法人等の名称"] = driver.find_element(By.ID, "rowSpanId3").text
-        data["法人等のふりがな"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[2]/td").text
-        data["法人番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[3]/td").text
-        data["主たる事務所の所在地_郵便番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[5]/td").text
-        data["主たる事務所の所在地_市町村"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[4]/td").text
-        data["法人代表者氏名"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[6]/td").text
-        data["代表者職名"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[7]/td").text
-        data["設立年月日"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[8]/td").text
-        data["法人種別"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[9]/td").text
-        data["電話番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[10]/td").text
-        data["FAX番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[11]/td").text
+        data["法人_法人等の名称"] = driver.find_element(By.ID, "rowSpanId3").text
+        data["法人_法人等のふりがな"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[2]/td").text
+        data["法人_法人番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[3]/td").text
+        data["法人_主たる事務所の所在地_郵便番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[5]/td").text
+        data["法人_主たる事務所の所在地_市町村"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[4]/td").text
+        data["法人_法人代表者氏名"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[6]/td").text
+        data["法人_代表者職名"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[7]/td").text
+        data["法人_設立年月日"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[8]/td").text
+        data["法人_法人種別"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[9]/td").text
+        data["法人_電話番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[10]/td").text
+        data["法人_FAX番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-1']/table/tbody/tr[11]/td").text
         
         # サービス提供状況（画像要素の処理）
         service_elements = [
@@ -60,9 +60,9 @@ def scrape_tab1_corporation_info(driver):
         for service_name, xpath in service_elements:
             try:
                 image_element = driver.find_element(By.XPATH, xpath)
-                data[f"サービス提供_{service_name}"] = image_element.get_attribute('src')
+                data[f"法人_サービス提供_{service_name}"] = image_element.get_attribute('src')
             except:
-                data[f"サービス提供_{service_name}"] = None
+                data[f"法人_サービス提供_{service_name}"] = None
                 
     except Exception as e:
         print(f"Error in tab1: {e}")
@@ -79,37 +79,37 @@ def scrape_tab2_location_info(driver):
         ).click()
         
         # 所在地情報の取得
-        data["事業所の名称"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[3]/td").text
-        data["事業所のふりがな"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[2]/td").text
-        data["郵便番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[4]/td").text
-        data["市町村"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[4]/td[2]").text
-        data["住所_番地まで"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[5]/td").text
-        data["住所_番地以降"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[6]/td").text
-        data["電話番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[7]/td").text
-        data["FAX番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[8]/td").text
+        data["事業所_名称"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[3]/td").text
+        data["事業所_ふりがな"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[2]/td").text
+        data["事業所_郵便番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[4]/td").text
+        data["事業所_市町村"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[4]/td[2]").text
+        data["事業所_住所_番地まで"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[5]/td").text
+        data["事業所_住所_番地以降"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[6]/td").text
+        data["事業所_電話番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[7]/td").text
+        data["事業所_FAX番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[8]/td").text
         
         # ホームページ（リンクの場合）
         try:
-            data["ホームページ"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[9]/td[2]/a").get_attribute('href')
+            data["事業所_ホームページ"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[9]/td[2]/a").get_attribute('href')
         except:
-            data["ホームページ"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[9]/td[2]").text
+            data["事業所_ホームページ"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[9]/td[2]").text
             
-        data["介護保険事業所番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[10]/td").text
-        data["事業所の管理者の氏名"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[11]/td").text
-        data["管理者の職名"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[12]/td").text
-        data["事業の開始年月日"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[14]/td").text
-        data["指定の年月日"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[15]/td").text
-        data["指定の更新年月日"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[16]/td").text
+        data["事業所_介護保険事業所番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[10]/td").text
+        data["事業所_管理者の氏名"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[11]/td").text
+        data["事業所_管理者の職名"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[12]/td").text
+        data["事業所_事業の開始年月日"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[14]/td").text
+        data["事業所_指定の年月日"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[15]/td").text
+        data["事業所_指定の更新年月日"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[16]/td").text
         
         # 生活保護法指定機関（画像）
         try:
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[17]/td/img")
-            data["生活保護法第54条の2指定機関"] = image_element.get_attribute('src')
+            data["事業所_生活保護法第54条の2指定機関"] = image_element.get_attribute('src')
         except:
-            data["生活保護法第54条の2指定機関"] = None
+            data["事業所_生活保護法第54条の2指定機関"] = None
             
-        data["主な利用交通手段"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[19]/td").text
-        data["ケアプランデータ連携システム利用登録"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[20]/td").text
+        data["事業所_主な利用交通手段"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[19]/td").text
+        data["事業所_ケアプランデータ連携システム利用登録"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[20]/td").text
         
     except Exception as e:
         print(f"Error in tab2: {e}")
@@ -126,23 +126,23 @@ def scrape_tab3_staff_info(driver):
         ).click()
         
         # 主要な従業者情報の取得
-        data["管理者_常勤_資格"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td").text
-        data["管理者_常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[2]").text
-        data["管理者_非常勤_資格"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[3]").text
-        data["管理者_非常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[4]").text
-        data["管理者_合計_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[5]").text
-        data["管理者_常勤換算"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[6]").text
+        data["従業者_管理者_常勤_資格"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td").text
+        data["従業者_管理者_常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[2]").text
+        data["従業者_管理者_非常勤_資格"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[3]").text
+        data["従業者_管理者_非常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[4]").text
+        data["従業者_管理者_合計_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[5]").text
+        data["従業者_管理者_常勤換算"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[4]/td[6]").text
         
         # 介護支援専門員の情報
-        data["介護支援専門員_常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[5]/td").text
-        data["介護支援専門員_非常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[5]/td[2]").text
-        data["介護支援専門員_合計_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[5]/td[3]").text
-        data["介護支援専門員_常勤換算"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[5]/td[4]").text
+        data["従業者_介護支援専門員_常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[5]/td").text
+        data["従業者_介護支援専門員_非常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[5]/td[2]").text
+        data["従業者_介護支援専門員_合計_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[5]/td[3]").text
+        data["従業者_介護支援専門員_常勤換算"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[5]/td[4]").text
         
         # 事務員等の情報
-        data["事務員等_常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[6]/td").text
-        data["事務員等_非常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[6]/td[2]").text
-        data["事務員等_合計_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[6]/td[3]").text
+        data["従業者_事務員等_常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[6]/td").text
+        data["従業者_事務員等_非常勤_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[6]/td[2]").text
+        data["従業者_事務員等_合計_実人数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-4']/table/tbody/tr[6]/td[3]").text
         
         # 資格・研修情報の取得（主要なもの）
         qualifications = [
@@ -164,10 +164,10 @@ def scrape_tab3_staff_info(driver):
         
         for qual_name, row_num in qualifications:
             try:
-                data[f"{qual_name}_常勤"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td").text
-                data[f"{qual_name}_非常勤"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td[2]").text
-                data[f"{qual_name}_合計"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td[3]").text
-                data[f"{qual_name}_常勤換算"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td[4]").text
+                data[f"従業者_{qual_name}_常勤"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td").text
+                data[f"従業者_{qual_name}_非常勤"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td[2]").text
+                data[f"従業者_{qual_name}_合計"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td[3]").text
+                data[f"従業者_{qual_name}_常勤換算"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-4']/table/tbody/tr[{row_num}]/td[4]").text
             except:
                 continue
                 
@@ -186,25 +186,25 @@ def scrape_tab4_service_info(driver):
         ).click()
         
         # 基本情報
-        data["事業所の運営に関する方針"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[2]/td").text
+        data["サービス_事業所の運営に関する方針"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[2]/td").text
         
         # 営業時間
-        data["平日の営業時間"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[4]/td").text
-        data["土曜日の営業時間"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[5]/td").text
-        data["日曜日の営業時間"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[6]/td").text
-        data["祝日の営業時間"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[7]/td").text
-        data["定休日"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[8]/td").text
-        data["留意事項"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[9]/td").text
+        data["サービス_平日の営業時間"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[4]/td").text
+        data["サービス_土曜日の営業時間"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[5]/td").text
+        data["サービス_日曜日の営業時間"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[6]/td").text
+        data["サービス_祝日の営業時間"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[7]/td").text
+        data["サービス_定休日"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[8]/td").text
+        data["サービス_留意事項"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[9]/td").text
         
         # 緊急時対応
         try:
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[11]/td/img")
-            data["緊急時の電話連絡の対応"] = image_element.get_attribute('src')
+            data["サービス_緊急時の電話連絡の対応"] = image_element.get_attribute('src')
         except:
-            data["緊急時の電話連絡の対応"] = None
+            data["サービス_緊急時の電話連絡の対応"] = None
             
-        data["緊急時連絡先電話番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[12]/td").text
-        data["通常のサービス提供地域"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[14]/td").text
+        data["サービス_緊急時連絡先電話番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[12]/td").text
+        data["サービス_通常のサービス提供地域"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[14]/td").text
         
         # 介護報酬加算状況（主要なもの）
         addons = [
@@ -228,40 +228,40 @@ def scrape_tab4_service_info(driver):
         for addon_name, row_num in addons:
             try:
                 image_element = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[{row_num}]/td/img")
-                data[f"加算_{addon_name}"] = image_element.get_attribute('src')
+                data[f"サービス_加算_{addon_name}"] = image_element.get_attribute('src')
             except:
-                data[f"加算_{addon_name}"] = None
+                data[f"サービス_加算_{addon_name}"] = None
         
         # 利用者数情報
-        data["介護支援専門員一人当たりの利用者数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[32]/td").text
+        data["サービス_介護支援専門員一人当たりの利用者数"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[32]/td").text
         
         # 要介護度別利用者数
         care_levels = ["要支援1", "要支援2", "要介護1", "要介護2", "要介護3", "要介護4", "要介護5", "合計"]
         for i, level in enumerate(care_levels):
             try:
-                data[f"{level}_利用者数"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[35]/td[{i+1}]").text
-                data[f"{level}_前年同月"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[36]/td[{i+1}]").text
+                data[f"サービス_{level}_利用者数"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[35]/td[{i+1}]").text
+                data[f"サービス_{level}_前年同月"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[36]/td[{i+1}]").text
             except:
                 continue
         
         # 苦情対応窓口
-        data["苦情対応窓口名称"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[38]/td").text
-        data["苦情対応電話番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[39]/td").text
+        data["サービス_苦情対応窓口名称"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[38]/td").text
+        data["サービス_苦情対応電話番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[39]/td").text
         
         # 損害賠償保険
         try:
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[47]/td/img")
-            data["損害賠償保険の加入状況"] = image_element.get_attribute('src')
+            data["サービス_損害賠償保険の加入状況"] = image_element.get_attribute('src')
         except:
-            data["損害賠償保険の加入状況"] = None
+            data["サービス_損害賠償保険の加入状況"] = None
             
-        data["介護サービス提供内容の特色"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[49]/td").text
+        data["サービス_介護サービス提供内容の特色"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[49]/td").text
         
         # サービス利用割合
         services = ["訪問介護", "通所介護", "地域密着型通所介護", "福祉用具貸与"]
         for i, service in enumerate(services):
             try:
-                data[f"ケアプラン_{service}_利用割合"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[{52+i}]/td").text
+                data[f"サービス_ケアプラン_{service}_利用割合"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[{52+i}]/td").text
             except:
                 continue
                 
@@ -280,16 +280,16 @@ def scrape_tab5_user_info(driver):
         ).click()
         
         # 利用者関連情報
-        data["交通費の額及び算定方法"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-6']/table/tbody/tr[3]/td").text
+        data["利用者_交通費の額及び算定方法"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-6']/table/tbody/tr[3]/td").text
         
         # キャンセル料の徴収状況
         try:
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-6']/table/tbody/tr[4]/td/img")
-            data["キャンセル料徴収状況"] = image_element.get_attribute('src')
+            data["利用者_キャンセル料徴収状況"] = image_element.get_attribute('src')
         except:
-            data["キャンセル料徴収状況"] = None
+            data["利用者_キャンセル料徴収状況"] = None
             
-        data["キャンセル料の額・算定方法"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-6']/table/tbody/tr[5]/td").text
+        data["利用者_キャンセル料の額・算定方法"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-6']/table/tbody/tr[5]/td").text
         
     except Exception as e:
         print(f"Error in tab5: {e}")
