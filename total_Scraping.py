@@ -329,24 +329,32 @@ def scrape_website(driver, url):
 def clean_data_for_excel(df):
     """ExcelへのエクスポートのためにDataFrameをクリーンアップ"""
     df_clean = df.copy()
-    
+
+    limit = 32000
+
     for column in df_clean.columns:
+        # 数値列はそのまま保持
+        if pd.api.types.is_numeric_dtype(df_clean[column]):
+            continue
+
         # NaN値を空文字列に変換
         df_clean[column] = df_clean[column].fillna('')
-        
-        # 文字列型に変換
-        df_clean[column] = df_clean[column].astype(str)
-        
-        # Excelのセル文字数制限（32,767文字）を超える場合は切り詰める
-        df_clean[column] = df_clean[column].apply(
-            lambda x: x[:32000] + "..." if len(str(x)) > 32000 else x
-        )
-        
+
+        # Excelのセル文字数制限（32,767文字）を超える場合のみ文字列化
+        max_len = df_clean[column].astype(str).str.len().max()
+        if max_len > limit:
+            df_clean[column] = df_clean[column].astype(str).apply(
+                lambda x: x[:limit] + "..." if len(str(x)) > limit else x
+            )
+        else:
+            # 必要に応じて文字列として扱う
+            df_clean[column] = df_clean[column].apply(str)
+
         # 改行文字を適切に処理（Excelでも改行として表示される）
         df_clean[column] = df_clean[column].apply(
             lambda x: str(x).replace('\r\n', '\n').replace('\r', '\n')
         )
-    
+
     return df_clean
 
 def save_to_excel_with_formatting(df, filename):
