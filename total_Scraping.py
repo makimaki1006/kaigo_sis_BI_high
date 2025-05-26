@@ -1,3 +1,4 @@
+import logging
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -7,6 +8,18 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 from db_utils import save_to_sqlite
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler("scraping.log", encoding="utf-8"),
+        logging.StreamHandler(),
+    ],
+)
+
+logger = logging.getLogger(__name__)
 
 def setup_webdriver():
     """WebDriverの設定と初期化"""
@@ -63,11 +76,11 @@ def scrape_tab1_corporation_info(driver):
                 image_element = driver.find_element(By.XPATH, xpath)
                 data[f"法人_サービス提供_{service_name}"] = image_element.get_attribute('src')
             except Exception as e:
-                print(f"Error retrieving 法人_サービス提供_{service_name}: {e}")
+                logger.error("Error retrieving 法人_サービス提供_%s: %s", service_name, e)
                 data[f"法人_サービス提供_{service_name}"] = None
                 
     except Exception as e:
-        print(f"Error in tab1: {e}")
+        logger.error("Error in tab1: %s", e)
     
     return data
 
@@ -94,7 +107,7 @@ def scrape_tab2_location_info(driver):
         try:
             data["事業所_ホームページ"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[9]/td[2]/a").get_attribute('href')
         except Exception as e:
-            print(f"Error retrieving 事業所_ホームページ: {e}")
+            logger.error("Error retrieving 事業所_ホームページ: %s", e)
             data["事業所_ホームページ"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[9]/td[2]").text
             
         data["事業所_介護保険事業所番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[10]/td").text
@@ -109,14 +122,14 @@ def scrape_tab2_location_info(driver):
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[17]/td/img")
             data["事業所_生活保護法第54条の2指定機関"] = image_element.get_attribute('src')
         except Exception as e:
-            print(f"Error retrieving 事業所_生活保護法第54条の2指定機関: {e}")
+            logger.error("Error retrieving 事業所_生活保護法第54条の2指定機関: %s", e)
             data["事業所_生活保護法第54条の2指定機関"] = None
             
         data["事業所_主な利用交通手段"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[19]/td").text
         data["事業所_ケアプランデータ連携システム利用登録"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-3']/table/tbody/tr[20]/td").text
         
     except Exception as e:
-        print(f"Error in tab2: {e}")
+        logger.error("Error in tab2: %s", e)
     
     return data
 
@@ -159,7 +172,7 @@ def scrape_tab3_staff_info(driver):
                 data[key] = cell.text.strip()
 
     except Exception as e:
-        print(f"Error in tab3: {e}")
+        logger.error("Error in tab3: %s", e)
 
     return data
 
@@ -188,7 +201,7 @@ def scrape_tab4_service_info(driver):
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[11]/td/img")
             data["サービス_緊急時の電話連絡の対応"] = image_element.get_attribute('src')
         except Exception as e:
-            print(f"Error retrieving サービス_緊急時の電話連絡の対応: {e}")
+            logger.error("Error retrieving サービス_緊急時の電話連絡の対応: %s", e)
             data["サービス_緊急時の電話連絡の対応"] = None
             
         data["サービス_緊急時連絡先電話番号"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[12]/td").text
@@ -218,7 +231,7 @@ def scrape_tab4_service_info(driver):
                 image_element = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[{row_num}]/td/img")
                 data[f"サービス_加算_{addon_name}"] = image_element.get_attribute('src')
             except Exception as e:
-                print(f"Error retrieving サービス_加算_{addon_name}: {e}")
+                logger.error("Error retrieving サービス_加算_%s: %s", addon_name, e)
                 data[f"サービス_加算_{addon_name}"] = None
         
         # 利用者数情報
@@ -231,7 +244,7 @@ def scrape_tab4_service_info(driver):
                 data[f"サービス_{level}_利用者数"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[35]/td[{i+1}]").text
                 data[f"サービス_{level}_前年同月"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[36]/td[{i+1}]").text
             except Exception as e:
-                print(f"Error retrieving サービス_{level} 利用者数情報: {e}")
+                logger.error("Error retrieving サービス_%s 利用者数情報: %s", level, e)
                 continue
         
         # 苦情対応窓口
@@ -243,7 +256,7 @@ def scrape_tab4_service_info(driver):
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[47]/td/img")
             data["サービス_損害賠償保険の加入状況"] = image_element.get_attribute('src')
         except Exception as e:
-            print(f"Error retrieving サービス_損害賠償保険の加入状況: {e}")
+            logger.error("Error retrieving サービス_損害賠償保険の加入状況: %s", e)
             data["サービス_損害賠償保険の加入状況"] = None
             
         data["サービス_介護サービス提供内容の特色"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-5']/table/tbody/tr[49]/td").text
@@ -254,11 +267,11 @@ def scrape_tab4_service_info(driver):
             try:
                 data[f"サービス_ケアプラン_{service}_利用割合"] = driver.find_element(By.XPATH, f"//div[@id='tableGroup-5']/table/tbody/tr[{52+i}]/td").text
             except Exception as e:
-                print(f"Error retrieving サービス_ケアプラン_{service}_利用割合: {e}")
+                logger.error("Error retrieving サービス_ケアプラン_%s_利用割合: %s", service, e)
                 continue
                 
     except Exception as e:
-        print(f"Error in tab4: {e}")
+        logger.error("Error in tab4: %s", e)
     
     return data
 
@@ -279,13 +292,13 @@ def scrape_tab5_user_info(driver):
             image_element = driver.find_element(By.XPATH, "//div[@id='tableGroup-6']/table/tbody/tr[4]/td/img")
             data["利用者_キャンセル料徴収状況"] = image_element.get_attribute('src')
         except Exception as e:
-            print(f"Error retrieving 利用者_キャンセル料徴収状況: {e}")
+            logger.error("Error retrieving 利用者_キャンセル料徴収状況: %s", e)
             data["利用者_キャンセル料徴収状況"] = None
             
         data["利用者_キャンセル料の額・算定方法"] = driver.find_element(By.XPATH, "//div[@id='tableGroup-6']/table/tbody/tr[5]/td").text
         
     except Exception as e:
-        print(f"Error in tab5: {e}")
+        logger.error("Error in tab5: %s", e)
     
     return data
 
@@ -317,10 +330,10 @@ def scrape_website(driver, url):
         # URLも記録
         all_data["URL"] = url
         
-        print(f"Successfully scraped: {url}")
+        logger.info("Successfully scraped: %s", url)
         
     except Exception as e:
-        print(f"Error scraping {url}: {e}")
+        logger.error("Error scraping %s: %s", url, e)
         all_data["URL"] = url
         all_data["エラー"] = str(e)
     
@@ -372,7 +385,7 @@ def save_to_excel_with_formatting(df, filename):
                         if len(str(cell.value)) > max_length:
                             max_length = len(str(cell.value))
                     except Exception as e:
-                        print(f"Error adjusting column width: {e}")
+                        logger.error("Error adjusting column width: %s", e)
                         pass
                 adjusted_width = min(max_length + 2, 50)
                 worksheet.column_dimensions[column[0].column_letter].width = adjusted_width
@@ -380,19 +393,19 @@ def save_to_excel_with_formatting(df, filename):
             # ヘッダー行を固定
             worksheet.freeze_panes = 'A2'
         
-        print(f"Excel file saved successfully: {filename}")
+        logger.info("Excel file saved successfully: %s", filename)
         return True
-        
+
     except Exception as e:
-        print(f"Error saving to Excel with formatting: {e}")
+        logger.error("Error saving to Excel with formatting: %s", e)
         # フォールバック：シンプルな保存を試行
         try:
             df_clean = clean_data_for_excel(df)
             df_clean.to_excel(filename, index=False, engine='openpyxl')
-            print(f"Excel file saved with basic formatting: {filename}")
+            logger.info("Excel file saved with basic formatting: %s", filename)
             return True
         except Exception as e2:
-            print(f"Error in fallback save: {e2}")
+            logger.error("Error in fallback save: %s", e2)
             return False
 
 def main():
@@ -402,7 +415,7 @@ def main():
     try:
         # ExcelファイルからURLリストを読み込み
         urls_df = pd.read_excel(excel_path, usecols=["URL"])
-        print(f"Found {len(urls_df)} URLs to scrape")
+        logger.info("Found %d URLs to scrape", len(urls_df))
         
         # WebDriverの初期化
         driver = setup_webdriver()
@@ -412,7 +425,7 @@ def main():
         
         for index, row in urls_df.iterrows():
             url = row['URL']
-            print(f"Processing {index + 1}/{total_urls}: {url}")
+            logger.info("Processing %d/%d: %s", index + 1, total_urls, url)
             
             # 各URLからデータを取得
             scraped_row = scrape_website(driver, url)
@@ -426,7 +439,7 @@ def main():
                 temp_df = pd.DataFrame(scraped_data_list)
                 temp_filename = f"中間保存_{index + 1}件.xlsx"
                 save_to_excel_with_formatting(temp_df, temp_filename)
-                print(f"Intermediate save completed: {temp_filename}")
+                logger.info("Intermediate save completed: %s", temp_filename)
         
         # WebDriverを終了
         driver.quit()
@@ -441,42 +454,53 @@ def main():
         success = save_to_excel_with_formatting(scraped_data, output_filename)
         
         if success:
-            print(f"Scraping completed! Results saved to {output_filename}")
-            print(f"Total records: {len(scraped_data)}")
-            print(f"Total columns: {len(scraped_data.columns)}")
+            logger.info("Scraping completed! Results saved to %s", output_filename)
+            logger.info("Total records: %d", len(scraped_data))
+            logger.info("Total columns: %d", len(scraped_data.columns))
             
             # データの統計情報を表示
-            print("\n=== データ概要 ===")
-            print(f"収集したURL数: {len(scraped_data)}")
-            print(f"エラーが発生したURL数: {scraped_data['エラー'].notna().sum() if 'エラー' in scraped_data.columns else 0}")
-            print(f"正常に処理されたURL数: {len(scraped_data) - (scraped_data['エラー'].notna().sum() if 'エラー' in scraped_data.columns else 0)}")
+            logger.info("\n=== データ概要 ===")
+            logger.info("収集したURL数: %d", len(scraped_data))
+            logger.info(
+                "エラーが発生したURL数: %d",
+                scraped_data['エラー'].notna().sum() if 'エラー' in scraped_data.columns else 0,
+            )
+            logger.info(
+                "正常に処理されたURL数: %d",
+                len(scraped_data)
+                - (
+                    scraped_data['エラー'].notna().sum()
+                    if 'エラー' in scraped_data.columns
+                    else 0
+                ),
+            )
             
             # CSVでもバックアップ保存
             csv_filename = "統合スクレイピング結果.csv"
             scraped_data.to_csv(csv_filename, index=False, encoding='utf-8-sig')
-            print(f"CSV backup saved: {csv_filename}")
+            logger.info("CSV backup saved: %s", csv_filename)
         else:
-            print("Excel保存に失敗しました。CSVで保存します。")
+            logger.error("Excel保存に失敗しました。CSVで保存します。")
             csv_filename = "統合スクレイピング結果_エラー時.csv"
             scraped_data.to_csv(csv_filename, index=False, encoding='utf-8-sig')
-            print(f"CSV file saved: {csv_filename}")
+            logger.info("CSV file saved: %s", csv_filename)
         
     except Exception as e:
-        print(f"Error in main process: {e}")
+        logger.error("Error in main process: %s", e)
         
         # エラー時でも可能な限りデータを保存
         if 'scraped_data_list' in locals() and scraped_data_list:
             emergency_df = pd.DataFrame(scraped_data_list)
             emergency_filename = "緊急保存_スクレイピング結果.csv"
             emergency_df.to_csv(emergency_filename, index=False, encoding='utf-8-sig')
-            print(f"Emergency save completed: {emergency_filename}")
+            logger.info("Emergency save completed: %s", emergency_filename)
     
     finally:
         # 万が一WebDriverが残っている場合の処理
         try:
             driver.quit()
         except Exception as e:
-            print(f"Error closing driver: {e}")
+            logger.error("Error closing driver: %s", e)
 
 if __name__ == "__main__":
     main()
