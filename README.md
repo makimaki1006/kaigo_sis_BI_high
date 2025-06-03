@@ -39,3 +39,14 @@ python visualize_facilities.py --city "札幌市" --radius 5 --csv 統合スク�
 
 This script geocodes facility addresses and outputs an interactive map (`map.html`).
 
+
+
+## Shift and Holiday Analysis
+The `shift_analysis.py` module provides utilities for analyzing holiday
+patterns and fatigue metrics. Import the functions you need and pass a
+`pandas.DataFrame` with schedule information.
+
+```python
+import pandas as pd
+from shift_analysis import holiday_distribution, find_busy_holidays
+```
